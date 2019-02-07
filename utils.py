@@ -1,8 +1,10 @@
 from datetime import datetime
-from cityweather import City
+from cityweather import City, CityIndex
+
+index = CityIndex()
 
 
-def current_condition(index, cityname):
+def current_condition(cityname):
     station_str = 'currentConditions/station'
     condition_str = 'currentConditions/condition'
     temperature_str = 'currentConditions/temperature'
@@ -14,13 +16,15 @@ def current_condition(index, cityname):
     text_summary = city.get_quantity(date_text_str)
     dt = datetime.strptime(time_stamp, '%Y%m%d%H%M%S') if time_stamp else None
 
-    print(f'Station: {city.get_quantity(station_str)}')
-    print(f'Lat: {city.get_attribute(station_str, "lat")}')
-    print(f'Long: {city.get_attribute(station_str, "lon")}')
-    print()
-    print(f'Date: {dt.date().isoformat() if dt else "?"}')
-    print(f'Time: {dt.time().isoformat() if dt else "?"}')
-    print()
-    print(f'Temp: {city.get_quantity(temperature_str)}')
-    print(f'Condition: {city.get_quantity(condition_str)}')
-    print('=====')
+    return {
+        'station': city.get_quantity(station_str),
+        'location': {
+            'lat': city.get_attribute(station_str, "lat"),
+            'lng': city.get_attribute(station_str, "lon")
+        },
+        'date_time_text': text_summary if text_summary else '',
+        'date': dt.date().isoformat() if dt else '',
+        'time': dt.time().isoformat() if dt else '',
+        'temperature': city.get_quantity(temperature_str),
+        'condition': city.get_quantity(condition_str)
+    }
