@@ -103,7 +103,7 @@ class City:
     def get_attribute(self, path, attribute):
         """Get the attribute of the element at XPath path"""
         element = self.tree.find(path)
-        if element is not None and element.attrib.has_key(attribute):
+        if element is not None and attribute in element.attrib:
             return element.attrib[attribute]
         return None
 
