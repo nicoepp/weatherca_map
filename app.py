@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from utils import current_condition
 
 app = Flask(__name__)
@@ -12,6 +12,11 @@ CITY_LIST = [
     'Revelstoke',
     'Creston'
 ]
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/api/conditions/all')
