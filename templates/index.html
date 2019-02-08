@@ -7,6 +7,20 @@
     <!-- The above 3 meta tags *must* come first -->
     <title>Weather Map - BC - North Coast Pizza</title>
 
+    {# Observations (if used in production):
+     # - The custom styles and Javascript shoud have their own *.css and *.js files
+     #   so they could be cached in the browser.
+     # - Maybe write cleaner Javascipt leveraging all the improvements of ES6
+     # - Use Webpack for a robuster setup and Babel.js to transpile back to ES5
+     #   to support more browsers.
+     # - For more flexibility in how to display the data on the map
+     #   we could use Dynamic Icons or InfoBox instead of InfoWindow
+     #   This would also allow us to show Icons (graphics) for the current condition
+     #   instead of showing it in text format.
+     #   See: - https://developers.google.com/chart/image/docs/gallery/dynamic_icons#weather-forecast-notes
+     #        - https://github.com/googlemaps/v3-utility-library/tree/master/infobox
+     #}
+
     <!-- Bootstrap -->
     <link
         rel="stylesheet"
@@ -16,14 +30,14 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        background:grey;
+        background: lightgray;
         display: block;
-        position:absolute;
-        height:auto;
-        bottom:0;
-        top:0;
-        left:0;
-        right:0;
+        position: absolute;
+        height: auto;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
         margin-top: 70px; /* adjust top margin to your header height */
       }
       .dl-horizontal dd {
@@ -67,6 +81,7 @@
       var citiesPromise = $.getJSON('api/conditions/all');
 
       function show_city(city, map) {
+        /* The data freshness can be different between cities so it should be shown individually at each city */
         var dataFreshness = '';
         if (city.time) {
           dataFreshness = 'observed at ' + city.time;
