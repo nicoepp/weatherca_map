@@ -12,19 +12,35 @@ def current_condition(cityname):
     timestamp_str = "currentConditions/dateTime[@name='observation'][@zone='PST'][@UTCOffset='-8']/timeStamp"
 
     city = City(index.data_url(cityname))
+    loc_lat = city.get_attribute(station_str, "lat")
+    loc_long = city.get_attribute(station_str, "lon")
     time_stamp = city.get_quantity(timestamp_str)
     text_summary = city.get_quantity(date_text_str)
     dt = datetime.strptime(time_stamp, '%Y%m%d%H%M%S') if time_stamp else None
 
     return {
+        'name': cityname,
         'station': city.get_quantity(station_str),
         'location': {
-            'lat': city.get_attribute(station_str, "lat"),
-            'lng': city.get_attribute(station_str, "lon")
+            'lat': lat_to_float(loc_lat),
+            'lng': long_to_float(loc_long)
         },
         'date_time_text': text_summary if text_summary else '',
         'date': dt.date().isoformat() if dt else '',
         'time': dt.time().isoformat() if dt else '',
-        'temperature': city.get_quantity(temperature_str),
+        'temperature': float(city.get_quantity(temperature_str)),
         'condition': city.get_quantity(condition_str)
     }
+
+
+def lat_to_float(lat_str):
+    sense = 1 if lat_str[-1:] == 'N' else -1
+    num = float(lat_str[:-1])
+    return num * sense
+
+
+def long_to_float(lat_str):
+    sense = -1 if lat_str[-1:] == 'W' else 1
+    num = float(lat_str[:-1])
+    return num * sense
+

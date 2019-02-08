@@ -16,7 +16,7 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        background:red;
+        background:grey;
         display: block;
         position:absolute;
         height:auto;
@@ -26,14 +26,21 @@
         right:0;
         margin-top: 70px; /* adjust top margin to your header height */
       }
+      .dl-horizontal dd {
+          margin-left: 55px;
+      }
+      .dl-horizontal dt {
+          text-align: left;
+          width: 50px;
+      }
+      .dl-horizontal {
+          margin-bottom: 0;
+      }
+      h4 {
+          margin-top: 0;
+          font-size: 14px
+      }
     </style>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
     <div class="container">
@@ -42,58 +49,66 @@
         </h1>
     </div>
 
-    <div id="map"></div>
+    <div id="map">
+      <h4>
+        Dease Lake
+      </h4>
+      <dl class="dl-horizontal">
+        <dt>Cond.:</dt>
+        <dd>Sunny</dd>
+        <dt>Temp.:</dt>
+        <dd>-9 °C</dd>
+      </dl>
+    </div>
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script lang="js">
-      // This example displays a marker at the center of Australia.
-      // When the user clicks the marker, an info window opens.
+      var citiesPromise = $.getJSON('api/conditions/all');
 
-
-      function initMap() {
-        var uluru = {lat: 49.050, lng: -122.304};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 7,
-          center: uluru
-        });
-
-        // language=HTML prefix=<body> suffix=</body>
-        var contentString = `
-            <div id="content">
-            <div id="siteNotice">
-            </div>
-            <h1 id="firstHeading" class="firstHeading">Uluru</h1>
-            <div id="bodyContent">
-            <p>
-                <b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large
-                sandstone rock formation in the souther
-            </p>
-            <p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">
-            https://en.wikipedia.org/w/index.php?title=Uluru</a>
-            (last visited June 22, 2009).</p>
-            </div>
-            </div
-        `;
-
+      function show_city(city, map) {
         var infowindow = new google.maps.InfoWindow({
-          content: contentString
+          content: `
+                <h4>
+                  ${city.name}
+                </h4>
+                <dl class="dl-horizontal">
+                  <dt>Cond.:</dt>
+                  <dd>${city.condition}</dd>
+                  <dt>Temp.:</dt>
+                  <dd>${city.temperature} °C</dd>
+                </dl>
+          `
         });
 
         var marker = new google.maps.Marker({
-          position: uluru,
+          position: city.location,
           map: map,
-          title: 'Uluru (Ayers Rock)'
+          title: city.station
         });
         marker.addListener('click', function () {
           infowindow.open(map, marker);
         });
+        infowindow.open(map, marker);
+      }
+
+      function initMap() {
+        var center = {lat: 56.22, lng: -122.68};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 5,
+          center: center
+        });
+
+        citiesPromise.done(function (resp) {
+          for (var city of resp.data) {
+            show_city(city, map);
+          }
+        });
       }
     </script>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWPDt4rxmVnX7OrxKz_H0nfBjFyv_GFWk&callback=initMap">
     </script>
