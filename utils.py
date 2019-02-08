@@ -30,7 +30,7 @@ def current_condition(cityname):
         },
         'date_time_text': text_summary if text_summary else '',
         'date': dt.date().isoformat() if dt else '',
-        'time': dt.time().isoformat() if dt else '',
+        'time': dt.time().isoformat()[:-3] if dt else '',
         'temperature': float(city.get_quantity(temperature_str)),
         'condition': city.get_quantity(condition_str)
     }

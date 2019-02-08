@@ -43,6 +43,9 @@
       h3.text-center {
         padding-top: 50px;
       }
+      .infowindow.small {
+        padding-top: 3px;
+      }
     </style>
   </head>
   <body>
@@ -64,6 +67,11 @@
       var citiesPromise = $.getJSON('api/conditions/all');
 
       function show_city(city, map) {
+        var dataFreshness = '';
+        if (city.time) {
+          dataFreshness = 'observed at ' + city.time;
+        }
+
         var infowindow = new google.maps.InfoWindow({
           content: `
                 <h4>
@@ -75,6 +83,9 @@
                   <dt>Temp.:</dt>
                   <dd>${city.temperature} °C</dd>
                 </dl>
+                <div class="infowindow small">
+                    <i>${dataFreshness}</i>
+                </div>
           `
         });
 
@@ -91,7 +102,7 @@
 
       function initMap() {
         citiesPromise.done(function (resp) {
-          var center = {lat: 56.22, lng: -122.68};
+          var center = {lat: 55.75, lng: -122.68};
           var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 5,
             center: center
