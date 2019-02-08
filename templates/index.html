@@ -100,6 +100,8 @@
           for (var city of resp.data) {
             show_city(city, map);
           }
+        }).fail(function (xhr) {
+          $('#map').find('h3').text(xhr.responseJSON.message);
         });
       }
     </script>

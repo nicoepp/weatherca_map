@@ -25,7 +25,10 @@ def index():
 
 @app.route('/api/conditions/all')
 def conditions():
-    city_weather_list = pool.map(current_condition, CITY_LIST)
+    try:
+        city_weather_list = pool.map(current_condition, CITY_LIST)
+    except IOError as e:
+        return jsonify(data=[], message=str(e)), 500
 
     return jsonify(data=city_weather_list)
 
