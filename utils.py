@@ -11,6 +11,9 @@ def current_condition(cityname):
     date_text_str = "currentConditions/dateTime[@name='observation'][@zone='PST'][@UTCOffset='-8']/textSummary"
     timestamp_str = "currentConditions/dateTime[@name='observation'][@zone='PST'][@UTCOffset='-8']/timeStamp"
 
+    # To measure the improvement of the concurrency just uncomment this line
+    # print(f'At {datetime.now().time().isoformat()} doing {cityname}')
+
     city = City(index.data_url(cityname))
     loc_lat = city.get_attribute(station_str, "lat")
     loc_long = city.get_attribute(station_str, "lon")

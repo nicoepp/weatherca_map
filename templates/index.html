@@ -40,6 +40,9 @@
           margin-top: 0;
           font-size: 14px
       }
+      h3.text-center {
+        padding-top: 50px;
+      }
     </style>
   </head>
   <body>
@@ -50,15 +53,9 @@
     </div>
 
     <div id="map">
-      <h4>
-        Dease Lake
-      </h4>
-      <dl class="dl-horizontal">
-        <dt>Cond.:</dt>
-        <dd>Sunny</dd>
-        <dt>Temp.:</dt>
-        <dd>-9 °C</dd>
-      </dl>
+      <div class="container">
+        <h3 class="text-center">Waiting...</h3>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -93,13 +90,13 @@
       }
 
       function initMap() {
-        var center = {lat: 56.22, lng: -122.68};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 5,
-          center: center
-        });
-
         citiesPromise.done(function (resp) {
+          var center = {lat: 56.22, lng: -122.68};
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 5,
+            center: center
+          });
+
           for (var city of resp.data) {
             show_city(city, map);
           }

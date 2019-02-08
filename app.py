@@ -1,5 +1,9 @@
 from flask import Flask, jsonify, render_template
 from utils import current_condition
+import multiprocessing
+
+
+pool = multiprocessing.Pool()
 
 app = Flask(__name__)
 
@@ -21,11 +25,7 @@ def index():
 
 @app.route('/api/conditions/all')
 def conditions():
-    city_weather_list = []
-
-    for city_name in CITY_LIST:
-        result = current_condition(city_name)
-        city_weather_list.append(result)
+    city_weather_list = pool.map(current_condition, CITY_LIST)
 
     return jsonify(data=city_weather_list)
 
